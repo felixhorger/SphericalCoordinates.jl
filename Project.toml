@@ -1,0 +1,4 @@
+name = "SphericalCoordinates"
+uuid = "0ddcfee3-264b-4850-828e-10b19036bfc0"
+authors = ["Felix Horger <felix.horger@kcl.ac.uk>"]
+version = "0.1.0"
