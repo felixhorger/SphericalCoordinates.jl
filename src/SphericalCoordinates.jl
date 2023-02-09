@@ -1,7 +1,8 @@
 
 module SphericalCoordinates
 
-	export spherical2cartesian, rand_hypersphere
+	export spherical2cartesian, rand_hypersphere, hypersphere
+	# TODO: There is CoordinateTransforms.jl
 
 	"""
 		Φ ∈ [0, 2π] × [0, 2π] × ...[0, π]
@@ -30,10 +31,26 @@ module SphericalCoordinates
 	end
 
 	"""
-		Sample angles from the hypersphere
+		Sample random angles from the hypersphere
 	"""
 	rand_hypersphere(dim::Val{2}) = (2π * rand(),)
 	rand_hypersphere(dim::Val{N}) where N = (ntuple(_ -> 2π * rand(), N-2)..., π * rand())
+
+	"""
+		Sample the hypersphere regularly (in spherical coordinates)
+	"""
+	function hypersphere(dim::Val{2}, num::Tuple{Integer})
+		return Base.Iterators.product(range(0, 2π * (1 - 1/num[1]); length=num[1]))
+	end
+	function hypersphere(dim::Val{N}, num::NTuple{M, Integer}) where {N, M}
+		@assert N > 2
+		@assert M == N - 1
+		offset = π / (num[M] + 2)
+		return Base.Iterators.product(
+			(range(0, 2π * (1 - 1/num[i]); length=num[i]) for i = 1:M-1)...,
+			range(offset, π - offset; length=num[M])
+		)
+	end
 
 end
 
